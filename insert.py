@@ -13,7 +13,8 @@ conn = connect()
 cursor = conn.cursor()
 
 for item in dados:
-    data_hora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    data_hora = item['DataHoraColeta']
 
     cursor.execute('''
         SELECT COUNT(*) FROM commodities WHERE nome = %s AND data_hora = %s
@@ -24,22 +25,19 @@ for item in dados:
             INSERT INTO commodities (
                 nome, data_hora, valor_atual, valor_maximo, valor_minimo,
                 variacao, porcentagem_var, json_commodities
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''',
-                       (
-                           item['Nome'],
-                           data_hora,
-                           float(item['UltimoValor'].replace(
-                               '.', '').replace(',', '.')),
-                           float(item['ValorMaximo'].replace(
-                               '.', '').replace(',', '.')),
-                           float(item['ValorMinimo'].replace(
-                               '.', '').replace(',', '.')),
-                           float(item['Variacao'].replace(',', '.')),
-                           item['PorcentagemVariacao'],
-                           json.dumps(item, ensure_ascii=False)
-                       ))
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (
+            item['Nome'],
+            data_hora,
+            float(item['UltimoValor'].replace('.', '').replace(',', '.')),
+            float(item['ValorMaximo'].replace('.', '').replace(',', '.')),
+            float(item['ValorMinimo'].replace('.', '').replace(',', '.')),
+            float(item['Variacao'].replace(',', '.')),
+            item['PorcentagemVariacao'],
+            json.dumps(item, ensure_ascii=False)
+        ))
 
 conn.commit()
 cursor.close()
-conn.close
-print("Dados inseridos com sucesso no PostgreeSQL!")
+conn.close()
+print("Dados inseridos com sucesso no PostgreSQL!")
