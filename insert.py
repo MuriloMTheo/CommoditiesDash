@@ -1,10 +1,11 @@
 import psycopg2
 import requests
 import json
+import os
 from datetime import datetime
 from db import connect
 
-url = 'http://127.0.0.1:5000/commodities'
+url = os.environ.get('API_URL', 'http://127.0.0.1:5000/commodities')
 response = requests.get(url)
 dados = response.json()
 
