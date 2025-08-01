@@ -1,1 +1,1 @@
-web: python insert.py
+web: gunicorn app:app

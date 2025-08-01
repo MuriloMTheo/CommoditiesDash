@@ -46,4 +46,3 @@ else:
 conn.commit()
 cursor.close()
 conn.close()
-print("Dados inseridos com sucesso no PostgreSQL!")
