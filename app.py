@@ -66,7 +66,7 @@ def commodities():
     print(f"Filtro recebido: {filtro}")
 
     dados = coleta_dados()
-
+    print(f"Dados coletados: {dados}")
     if filtro:
         filtro = filtro.lower().replace(" ", "")
         dados = [
