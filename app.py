@@ -10,7 +10,11 @@ app = Flask(__name__)
 
 def coleta_dados():
     url = "https://br.investing.com/commodities/softs"
-    headers = {"User-Agent": "Mozilla/5.0"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "Accept-Language": "pt-BR,pt;q=0.9"
+    }
+
     try:
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
@@ -49,6 +53,11 @@ def coleta_dados():
     except Exception as e:
         print(f"Erro ao coletar dados: {e}")
         return []
+
+
+@app.route("/")
+def home():
+    return "API está funcionando!"
 
 
 @app.route("/commodities")
