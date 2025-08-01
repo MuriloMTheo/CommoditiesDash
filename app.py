@@ -55,26 +55,14 @@ def coleta_dados():
         return []
 
 
-@app.route("/")
-def home():
-    return "API está funcionando!"
-
-
 @app.route("/commodities")
 def commodities():
-    filtro = request.args.get("nome")
-    print(f"Filtro recebido: {filtro}")
-
-    dados = coleta_dados()
-    print(f"Dados coletados: {dados}")
-    if filtro:
-        filtro = filtro.lower().replace(" ", "")
-        dados = [
-            item for item in dados if filtro in item["Nome"].lower().replace(" ", "")]
-    else:
-        print("Nenhum filtro aplicado")
-
-    json_str = json.dumps(dados, ensure_ascii=False)
+    exemplo = [
+        {"Nome": "Teste", "DataHoraColeta": "2025-08-01 12:00", "Mes": "Ago",
+         "UltimoValor": "100", "ValorMaximo": "110", "ValorMinimo": "90",
+         "Variacao": "+1", "PorcentagemVariacao": "+1%"}
+    ]
+    json_str = json.dumps(exemplo, ensure_ascii=False)
     return Response(json_str, mimetype='application/json; charset=utf-8')
 
 
