@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, Response
 from dotenv import load_dotenv
+from flask_cors import CORS
 import json
 import os
 import psycopg2
@@ -10,6 +11,7 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 app = Flask(__name__)
+CORS(app)
 
 
 def get_connection():
