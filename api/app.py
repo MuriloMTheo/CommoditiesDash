@@ -1,53 +1,50 @@
-from flask import Flask, jsonify, Response
-from dotenv import load_dotenv
+from flask import Flask, jsonify, Response, request
 from flask_cors import CORS
+from db import get_connection
+from sqlalchemy import text
 import json
 import os
-import psycopg2
-import psycopg2.extras
-
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 app = Flask(__name__)
 CORS(app)
 
 
-def get_connection():
-    return psycopg2.connect(DATABASE_URL)
-
-
 @app.route("/commodities", methods=["GET"])
 def get_commodities():
     try:
-        conn = get_connection()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        nome_filtro = request.args.get(
+            "nome", "").strip().lower().replace(" ", "")
+        with get_connection() as conn:
+            result = conn.execute(
+                text("SELECT * FROM commodities ORDER BY id, data_hora, nome"))
+            rows = result.fetchall()
 
-        cur.execute(
-            "SELECT * FROM commodities ORDER BY data_hora, nome")
-        rows = cur.fetchall()
+        if nome_filtro:
+            rows = [row for row in rows if nome_filtro in row.nome.replace(
+                " ", "").lower()]
 
         results = []
         for row in rows:
             results.append({
-                "idcoleta": row["idcoleta"],
-                "nome": row["nome"],
-                "data_hora": row["data_hora"],
-                "valor_atual": (row["valor_atual"]),
-                "valor_maximo": (row["valor_maximo"]),
-                "valor_minimo": (row["valor_minimo"]),
-                "variacao": (row["variacao"]),
-                "porcentagem_var": f"{str(row['porcentagem_var']).replace('%', '')}%",
-                "json_completo": row["json_commodities"]
+                "idcoleta": row.id,
+                "nome": row.nome,
+                "data_hora": row.data_hora,
+                "valor_atual": row.valor_atual,
+                "valor_maximo": row.valor_maximo,
+                "valor_minimo": row.valor_minimo,
+                "variacao": row.variacao,
+                "porcentagem_var": f"{row.porcentagem_var}%"
             })
 
-        cur.close()
-        conn.close()
-
         return Response(json.dumps(results, ensure_ascii=False), mimetype="application/json")
+
     except Exception as e:
         return jsonify({"Erro": str(e)}), 500
+
+
+@app.route("/favicon.ico")
+def favicon():
+    return "", 204
 
 
 if __name__ == "__main__":

@@ -1,10 +1,14 @@
-import psycopg2
 import os
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+
+load_dotenv()
+
+DEFAULT_SQLITE = "sqlite:///./data/commodities.db"
+DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_SQLITE)
+
+engine = create_engine(DATABASE_URL, future=True)
 
 
-def connect():
-    dsn = os.getenv("DATABASE_URL")
-    print(f"DEBUG DATABASE_URL: {dsn}")
-    if not dsn:
-        raise Exception("DATABASE_URL não está definida no ambiente")
-    return psycopg2.connect(dsn)
+def get_connection():
+    return engine.connect()

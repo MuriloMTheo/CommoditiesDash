@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-import psycopg2
 import json
 import os
 from dotenv import load_dotenv
@@ -30,9 +29,9 @@ def coleta_dado():
         try:
             nome = columns[1].find("a").text.strip()
             mes = columns[2].text.strip()
-            valor_ultimo = columns[3].text.strip().replace(",", ".")
-            valor_max = columns[4].text.strip().replace(",", ".")
-            valor_min = columns[5].text.strip().replace(",", ".")
+            valor_ultimo = columns[3].text.strip().replace(",", "")
+            valor_max = columns[4].text.strip().replace(",", "")
+            valor_min = columns[5].text.strip().replace(",", "")
             variacao = columns[6].text.strip().replace(",", ".")
             variacao_porc = columns[7].text.strip().replace(
                 ",", ".").replace("%", "")
