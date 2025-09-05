@@ -1,0 +1,16 @@
+dashboard/**/*.js linguist-language=JavaScript
+dashboard/**/*.jsx linguist-language=JavaScript
+dashboard/**/*.ts linguist-language=TypeScript
+dashboard/**/*.tsx linguist-language=TypeScript
+dashboard/**/*.css linguist-language=CSS
+dashboard/**/*.scss linguist-language=CSS
+dashboard/**/*.html linguist-language=HTML
+
+api/**/*.py linguist-language=Python
+
+
+node_modules/** linguist-vendored
+*.lock linguist-vendored
+*.env linguist-vendored
+dist/** linguist-vendored
+build/** linguist-vendored
