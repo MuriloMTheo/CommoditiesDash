@@ -27,6 +27,7 @@ function App(){
     datasets: [],
   }); 
   const [CulturaSelecionada, setCulturaSelecionada] = useState(null);
+  const [ultimoRegistro, setUltimoRegistro] = useState(null);
 
 useEffect(() => {
   api.get("")
@@ -42,17 +43,20 @@ useEffect(() => {
       const dadosFiltrados = CulturaSelecionada
       ? dados.filter(item => item.nome === CulturaSelecionada)
       : dados;
-      const dadosOrdenados = [...dadosFiltrados].sort((a,b) => a.data_hora - b.data_hora);
-      const labels = dadosOrdenados.map(item => `${item.nome} - ${item.data_hora.substring(0, 10)}`);
+      const dadosOrdenados = [...dadosFiltrados].sort((a,b) => new Date(a.data_hora) - new Date(b.data_hora));
+      const labels = dadosOrdenados.map(item => `${item.data_hora.substring(0, 10)}`);
       const valores = dadosOrdenados.map(item => item.valor_atual/100);
       const valoresFormatados = valores.map(val => (val /  100).toLocaleString("en-US",{ style: "currency", currency: "USD" }));
+      
+      const ultimo = dadosOrdenados[dadosOrdenados.length - 1];
+      setUltimoRegistro(ultimo);
 
       setChartData({
         labels,
         datasets: [
           {
             label: "Preço do Commodity",
-            data: valores,
+            data: CulturaSelecionada ? valores : [],
             borderColor: "rgba(30, 216, 216, 0.5)",
             backgroundColor: "rgba(20, 117, 117, 0.5)",
             fill: false,
@@ -108,13 +112,13 @@ useEffect(() => {
       {[
         "Cacau de Londres",
         "Café Londres",
-        "Açúcar NY nº11",
+        "Açúcar Londres",
         "Cacau NY",
-        "Café Contrato C",
         "Suco de Laranja NY",
+        "Açúcar NY nº11",
+        "Café Contrato C",
         "Algodão nº2",
-        "Madeira Serrada",
-        "Açúcar Londres"
+        "Madeira Serrada"
       ].map(nome => (
         <button 
           key={nome} 
@@ -126,12 +130,42 @@ useEffect(() => {
       ))}
     </div>
 
+    <div class="cultura-container">
+      <div class="cultura-titulo">{CulturaSelecionada ? CulturaSelecionada: "Selecione uma Cultura"}</div>
+      
+      <div class="cultura-valorcard">
+        <div class="valor-item1">
+          <div class="cultura-valortitle1">COTAÇÃO ATUAL</div>
+          <div class="cultura-valoratual">{CulturaSelecionada && ultimoRegistro ? `$${ultimoRegistro.valor_atual/100}`: "-"}</div>
+        </div>
+        <div class="valor-item2">
+          <div class="cultura-valortitle2">COTAÇÃO MÁXIMA</div>
+          <div class="cultura-valormax">{CulturaSelecionada && ultimoRegistro ? `$${ultimoRegistro.valor_maximo/100}`: "-"}</div>
+        </div>
+        <div class="valor-item3">
+          <div class="cultura-valortitle3">COTAÇÃO MÍNIMA</div>
+          <div class="cultura-valormin">{CulturaSelecionada && ultimoRegistro ? `$${ultimoRegistro.valor_minimo/100}`: "-"}</div>
+        </div>
+        <div class="valor-item4">
+          <div class="cultura-valortitle4">VARIAÇÃO</div>
+          <div class="cultura-variacao">{CulturaSelecionada && ultimoRegistro ? `${ultimoRegistro.variacao > 0 ? "+" : ""} ${(ultimoRegistro.variacao/100).toFixed(2)}`: "-"}</div>
+        </div>
+        <div class="valor-item5">
+          <div class="cultura-valortitle5">% VARIAÇÃO</div>
+          <div class={`cultura-porcentagemvar ${CulturaSelecionada && ultimoRegistro ? ultimoRegistro.porcentagem_var.replace("%", "") >= 0 ? "positivo":"negativo": ""}`}>
+            {CulturaSelecionada && ultimoRegistro ? (parseFloat(ultimoRegistro.porcentagem_var.replace("%", "")) / 100).toFixed(2)+"%": "-"}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     {}
     <div className="grafico-container">
        {chartData.labels.length > 0 ? (
         <Line data={chartData} options={options} />
        ) : (
-      <p>Carregando dados...</p>  )}
+      <p>Selecione uma cultura</p>  )}
     </div>
   </div>
 );

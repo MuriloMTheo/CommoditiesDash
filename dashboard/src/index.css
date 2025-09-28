@@ -7,7 +7,7 @@ body {
 
 .dashboard-container {
   max-width: 1200px;
-  margin: 50px auto;
+  margin: -25px auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -22,11 +22,11 @@ body {
 .dashboard-title h2 {
   font-size: 3rem;
   font-weight: 700;
-  color: #1ed8d8; /*azul-ciano moderno*/
+  color: #ffffff; 
   text-transform: uppercase;
   letter-spacing: 2px;
-  text-shadow: 0 3px 12px rgba(30, 216, 216, 0.5);
-  margin: 0;
+  margin-bottom: auto;
+  margin-top: auto;
 }
 
 .botao-container {
@@ -37,16 +37,15 @@ body {
 }
 
 .botao-cultura {
-  padding: 8px 16px;
+  padding: 1px 13px;
   cursor: pointer;
-  border: none;
   border-radius: 2px;
   background-color: #2b2b3b; 
   color: #e0e0e0;
   font-weight: 500;
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-  flex: 1 1 110px; /* cresce, encolhe e tenta ter 120px de largura */
+  border: 1px solid #ffffff;
+  flex: 1 1 110px; 
   max-width: 120px;
 }
 
@@ -54,20 +53,114 @@ body {
   background-color: #1ed8d8;
   color: #121212;
   transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(30, 216, 216, 0.5);
 }
 
 .botao-cultura.selecionado {
   background-color: #1ed8d8;
   color: #121212;
-  box-shadow: 0 6px 20px rgba(30, 216, 216, 0.7);
+}
+
+.cultura-container {
+  display: flex;
+  align-items: center; 
+  gap: 180px; 
+  flex-wrap: wrap;
+}
+
+.cultura-titulo {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #2b2b3b;
+  color: #e0e0e0;
+  font-weight: bold;
+  border: 1px solid #ffffff;
+  text-align: center;
+  font-size: 25px;
+  min-width: 250px;
+  margin-left: -30px;
+}
+
+.cultura-valorcard {
+  display: flex;
+  gap: 40px; 
+}
+
+.valor-item1,
+.valor-item2,
+.valor-item3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #2b2b3b;
+  border: 1px solid #ffffff;
+  padding: 18px 30px;
+  border-radius: 4px;
+  min-width: 120px;
+}
+
+.valor-item4,
+.valor-item5 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #2b2b3b;
+  border: 1px solid #ffffff;
+  padding: 18px 30px;
+  border-radius: 4px;
+  min-width: 120px;
+}
+
+.cultura-valortitle1,
+.cultura-valortitle2,
+.cultura-valortitle3{
+  color: #e0e0e0;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.cultura-valortitle4,
+.cultura-valortitle5 {
+  color: #e0e0e0;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.cultura-valoratual,
+.cultura-valormax,
+.cultura-valormin {
+  color: #e0e0e0;
+  font-weight: bold;
+  font-size: 28px;
+  text-align: center;
+}
+
+.cultura-variacao,
+.cultura-porcentagemvar {
+  color: #e0e0e0;
+  font-weight: bold;
+  font-size: 28px;
+  text-align: center;
+}
+
+.cultura-porcentagemvar.positivo {
+  color: #00ff40;
+}
+
+.cultura-porcentagemvar.negativo {
+  color: #ff0000; 
 }
 
 .grafico-container {
   width: 100%;
-  height: 520px;
+  height: 480px;
   background-color: #2b2b3b;   
-  padding: 30px;
+  padding: 20px;
   border-radius: 0.9px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.6);
   display: flex;
