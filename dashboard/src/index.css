@@ -1,18 +1,48 @@
-body {
-  background-color: #1e1e2f;      
-  color: #e0e0e0;                 
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  margin: 0;
+:root {
+  --color-bg-dark: #0f101c;
+  --color-bg-container: #1a1c2d;
+  --color-text-light: #e0e0e0;
+  --color-accent: #1ed8d8;
+  --color-positive: #38c172;
+  --color-negative: #e3342f;
+  --color-sidebar-bg: #0c0c18;
+  --shadow-subtle: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.dashboard-container {
-  max-width: 1200px;
-  margin: -25px auto;
-  padding: 20px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  min-height: 100vh;
+}
+
+.dashboard-layout {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px; 
+  min-height: 100vh;
+}
+
+/*Sidebar do Dash, utilizando componentes do React*/
+.sidebar {
+  box-shadow: var(--shadow-subtle);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .ps-menu-button {
+  color: var(--color-accent);
+  padding: 15px 20px;
+  transition: background-color 0.3s;
+}
+
+.dashboard-main {
+  flex-grow: 1;
+  padding: 20px 30px;
+  width: calc(100% - 200px); /*Ajuste inicial para desktop*/
 }
 
 .dashboard-title {
@@ -20,180 +50,286 @@ body {
 }
 
 .dashboard-title h2 {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #ffffff; 
+  color: #ffffff;
+  font-size: 1.8rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: auto;
-  margin-top: auto;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 5px;
+  display: inline-block;
 }
 
+/*Container Principal (Grid/Flex)*/
+
+.dashboard-container {
+  display: grid;
+  /* Define layout responsivo para desktop */
+  grid-template-areas:
+    "buttons buttons"
+    "main-cards column-cards"
+    "chart chart"
+    "select-date select-title";
+  grid-template-columns: 3fr 1fr;
+  gap: 20px;
+}
+
+/*Botões de Seleção (Commodities)*/
+
 .botao-container {
+  grid-area: buttons;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+  gap: 10px;
+  padding: 15px;
+  background-color: var(--color-bg-container);
+  border-radius: 12px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .botao-cultura {
-  padding: 1px 13px;
+  background-color: #2a2e45;
+  color: var(--color-text-light);
+  padding: 8px 15px;
+  border: 2px solid transparent;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 2px;
-  background-color: #2b2b3b; 
-  color: #e0e0e0;
   font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-  border: 1px solid #ffffff;
-  flex: 1 1 110px; 
-  max-width: 120px;
+  transition: all 0.2s ease-in-out;
 }
 
 .botao-cultura:hover {
-  background-color: #1ed8d8;
-  color: #121212;
-  transform: scale(1.08);
+  border-color: var(--color-accent);
+  background-color: #383c55;
 }
 
 .botao-cultura.selecionado {
-  background-color: #1ed8d8;
-  color: #121212;
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark); /* Texto escuro no botão de destaque */
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(30, 216, 216, 0.5);
 }
 
+/*Cards de Valores e Colunas*/
+/* Container Principal dos Cards */
 .cultura-container {
+  grid-area: main-cards;
   display: flex;
-  align-items: center; 
-  gap: 180px; 
-  flex-wrap: wrap;
+  flex-direction: column;
+  background-color: var(--color-bg-container);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .cultura-titulo {
-  padding: 8px 16px;
-  cursor: pointer;
-  background-color: #2b2b3b;
-  color: #e0e0e0;
-  font-weight: bold;
-  border: 1px solid #ffffff;
-  text-align: center;
-  font-size: 25px;
-  min-width: 250px;
-  margin-left: -30px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  margin-bottom: 20px;
 }
 
+/*Cards de Cotação (Valor Atual, Máximo, Mínimo)*/
 .cultura-valorcard {
   display: flex;
-  gap: 40px; 
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .valor-item1,
 .valor-item2,
 .valor-item3 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #2b2b3b;
-  border: 1px solid #ffffff;
-  padding: 18px 30px;
-  border-radius: 4px;
-  min-width: 120px;
+  flex: 1 1 150px; /*Garante que os cards sejam flexíveis e quebrem em telas menores*/
+  padding: 15px;
+  background-color: #2a2e45;
+  border-radius: 8px;
+  min-width: 150px;
+  box-shadow: var(--shadow-subtle);
 }
 
-.valor-item4,
-.valor-item5 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #2b2b3b;
-  border: 1px solid #ffffff;
-  padding: 18px 30px;
-  border-radius: 4px;
-  min-width: 120px;
-}
-
-.cultura-valortitle1,
-.cultura-valortitle2,
-.cultura-valortitle3{
-  color: #e0e0e0;
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.cultura-valortitle4,
-.cultura-valortitle5 {
-  color: #e0e0e0;
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 8px;
-  text-align: center;
+/*Utiliza [] para definir atributos e evitar repetição*/
+[class^="cultura-valortitle"] {
+  font-size: 0.8rem;
+  color: rgba(224, 224, 224, 0.7);
+  margin-bottom: 5px;
+  font-weight: 600;
 }
 
 .cultura-valoratual,
 .cultura-valormax,
 .cultura-valormin {
-  color: #e0e0e0;
+  font-size: 1.5rem;
   font-weight: bold;
-  font-size: 28px;
-  text-align: center;
+}
+
+.cultura-valoratual {
+  color: var(--color-accent);
+}
+
+/* Coluna de Variações e Data */
+.cultura-container-coluna {
+  grid-area: column-cards;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.valor-item4,
+.valor-item5,
+.valor-item6 {
+  padding: 15px;
+  background-color: var(--color-bg-container);
+  border-radius: 12px;
+  box-shadow: var(--shadow-subtle);
 }
 
 .cultura-variacao,
-.cultura-porcentagemvar {
-  color: #e0e0e0;
+.cultura-diacotacao {
+  font-size: 1.2rem;
   font-weight: bold;
-  font-size: 28px;
-  text-align: center;
 }
 
-.cultura-porcentagemvar.positivo {
-  color: #00ff40;
+.cultura-porcentagemvar {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 5px;
+  display: inline-block;
 }
 
-.cultura-porcentagemvar.negativo {
-  color: #ff0000; 
+.positivo {
+  color: var(--color-positive);
+  background-color: rgba(56, 193, 114, 0.1);
 }
+
+.negativo {
+  color: var(--color-negative);
+  background-color: rgba(227, 52, 47, 0.1);
+}
+
+/*Gráfico*/
 
 .grafico-container {
-  width: 100%;
-  height: 480px;
-  background-color: #2b2b3b;   
-  padding: 20px;
-  border-radius: 0.9px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  grid-area: chart;
+  background-color: var(--color-bg-container);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-subtle);
+  height: 400px; /* Altura fixa para o gráfico (ajustável) */
 }
 
-.chartjs-container {
-  width: 100%;
-  height: 100%;
+/*Fallback*/
+.grafico-container p {
+  text-align: center;
+  padding-top: 150px;
+  font-size: 1.2rem;
+  color: rgba(224, 224, 224, 0.5);
 }
 
-hr {
+/*Seletor de Datas e Título*/
+
+.SelecaoData-container {
+  grid-area: select-title;
+  align-self: center;
+}
+
+.SelecaoData-container h3 {
+  text-transform: uppercase;
+  font-size: 1.6rem;
+  color: var(--color-text-light);
+  font-weight: bold;
+}
+
+/* Estilo para o BotaoSelectData (que é um <select>) */
+.dashboard-container > select {
+  grid-area: select-date;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark);
   border: none;
-  height: 1px;
-  background: #3a3a4d;
-  margin: 40px 0;
+  font-weight: bold;
+  cursor: pointer;
+  appearance: none; /* Remove estilo padrão do sistema */
+  outline: none;
+  text-align: center;
+  transition: background-color 0.2s;
 }
 
-p {
-  color: #a0a0a0; /*metricas como carregando*/
+.dashboard-container > select:hover {
+  background-color: #16baba;
 }
 
-/*scrow*/
-::-webkit-scrollbar {
-  width: 8px;
+/*Responsividade (Mobile e Tablet)*/
+
+@media (max-width: 1024px) {
+  .dashboard-main {
+    padding: 15px;
+  }
+
+  .dashboard-container {
+    grid-template-areas:
+      "buttons"
+      "main-cards"
+      "column-cards"
+      "chart"
+      "select-date"
+      "select-title";
+    grid-template-columns: 1fr;
+  }
+
+  .cultura-valorcard {
+    flex-direction: column;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #1e1e2f;
-}
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column; /*Sidebar no topo em telas menores*/
+  }
 
-::-webkit-scrollbar-thumb {
-  background-color: #1ed8d8;
-  border-radius: 10px;
+  .sidebar {
+    width: 100%;
+    height: auto !important;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .dashboard-main {
+    width: 100%;
+    padding: 10px;
+  }
+
+  /*Ajuste no menu da Sidebar para visualização mobile*/
+  .sidebar .ps-menu-button {
+    padding: 10px 15px;
+    text-align: center;
+  }
+
+  .botao-container {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  .botao-container::-webkit-scrollbar {
+    display: none; /*Oculta a barra de rolagem no webkit browsers*/
+  }
+
+  .cultura-titulo {
+    font-size: 1.2rem;
+  }
+
+  .cultura-valoratual,
+  .cultura-valormax,
+  .cultura-valormin {
+    font-size: 1.3rem;
+  }
+
+  .grafico-container {
+    height: 300px;
+  }
 }

@@ -2,6 +2,7 @@ from scraping import coleta_dado
 from db import get_connection
 from sqlalchemy import text
 import json
+import datetime
 
 
 def insere_dado(dados):
@@ -28,3 +29,7 @@ def insere_dado(dados):
 if __name__ == "__main__":
     dados = coleta_dado()
     insere_dado(dados)
+
+with open("log_execucao.txt", "a", encoding="utf-8") as f:
+    f.write(f"Script executado em {datetime.datetime.now()}\n")
+    print("Log de execução atualizado.")
