@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import api from "./services/api";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
@@ -45,12 +45,19 @@ function App() {
   const [indice, setIndice] = useState(0); /*indices de 0-4*/
   const diasMap = { 0: 0, 1: 7, 2: 15, 3: 30, 4: 90 };
 
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [pontoSelecionado, setPontoSelecionado] = useState(null);
+
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [],
   });
   const [CulturaSelecionada, setCulturaSelecionada] = useState(null);
   const [ultimoRegistro, setUltimoRegistro] = useState(null);
+
+  /*Dado do click em cima do gráfico*/
+
+  const [dadosClickPonto, setdadosClickPonto] = useState([]);
 
   useEffect(() => {
     const QntDiaSelecionado = diasMap[indice];
@@ -69,6 +76,7 @@ function App() {
           return;
         }
 
+        /*DadosFiltrados me retorna o array da cultura selecionada*/
         const dadosFiltrados = CulturaSelecionada
           ? dados.filter((item) => item.nome === CulturaSelecionada)
           : dados;
@@ -86,8 +94,12 @@ function App() {
           })
         );
 
+        setdadosClickPonto(dadosFiltrados);
+
         const ultimo = dadosOrdenados[dadosOrdenados.length - 1];
         setUltimoRegistro(ultimo);
+
+        /*Monta o gráfico*/
 
         setChartData({
           labels,
@@ -99,6 +111,7 @@ function App() {
               backgroundColor: "rgba(20, 117, 117, 0.5)",
               fill: true,
               tension: 0.1,
+              pointBackgroundColor: "rgba(185, 253, 253, 1)",
             },
           ],
         });
@@ -139,6 +152,36 @@ function App() {
     },
   };
 
+  const DiaEspecifico = {
+    onClick: (event) => {
+      const chart = ChartJS.getChart(event.native.target); /*Acessa o chart*/
+
+      if (!chart) {
+        console.log("Gráfico não encontrado");
+        return;
+      }
+
+      const ponto = chart.getElementsAtEventForMode(
+        event,
+        "nearest",
+        { intersect: true },
+        true
+      ); /*Retorna informações do click do mouse em cima do chart*/
+
+      if (ponto.length > 0) {
+        const indiceClicado = ponto[0].index;
+        const label = chart.data.labels[indiceClicado];
+        const valor = chart.data.datasets[0].data[indiceClicado];
+
+        const RegistroDoClick = dadosClickPonto.find(
+          (item) => item.data_hora.substring(0, 10) === label
+        );
+        setPontoSelecionado(RegistroDoClick);
+        setMostrarModal(true);
+      } else setMostrarModal(false);
+    },
+  };
+
   return (
     <div className="dashboard-layout">
       {/* Faixa lateral */}
@@ -151,7 +194,7 @@ function App() {
         hoverBgColor="#1ed8d8"
       >
         <Menu>
-          <MenuItem>Dashboard</MenuItem>
+          <MenuItem>Dashboard Avançado</MenuItem>
           <MenuItem>Relatórios</MenuItem>
           <MenuItem>Configurações</MenuItem>
         </Menu>
@@ -274,11 +317,80 @@ function App() {
           {/* Gráfico */}
           <div className="grafico-container">
             {chartData.labels.length > 0 ? (
-              <Line data={chartData} options={options} />
+              <Line
+                data={chartData}
+                options={{ ...options, onClick: DiaEspecifico.onClick }}
+              />
             ) : (
               <p>Selecione uma cultura</p>
             )}
           </div>
+
+          {/* Modal de informações ao clicar no gráfico */}
+          {mostrarModal /*Abre o modal e somente fecha se clicar fora*/ && (
+            <div
+              onClick={() => setMostrarModal(false)}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0,0,0,0.5)", //Parte do fundo do modal
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              className="modal-fundo"
+            >
+              <div onClick={(e) => e.stopPropagation()} className="modal-tela">
+                <h3>
+                  Dia da Cotação:{" "}
+                  <p>{pontoSelecionado.data_hora.substring(0, 10)}</p>
+                </h3>
+                <br />
+                <h3>
+                  Cultura: <p>{pontoSelecionado.nome}</p>
+                </h3>
+                <br />
+                <h3>
+                  Cotação do dia: <p>${pontoSelecionado.valor_atual / 100}</p>
+                </h3>
+                <br />
+                <h3>
+                  Cotação Máxima do dia:{" "}
+                  <p>${pontoSelecionado.valor_maximo / 100}</p>
+                </h3>
+                <br />
+                <h3>
+                  Cotação Mínima do dia:{" "}
+                  <p>${pontoSelecionado.valor_minimo / 100}</p>
+                </h3>
+                <br />
+                <h3>
+                  Variação do dia:{" "}
+                  <p>
+                    {pontoSelecionado
+                      ? `${pontoSelecionado.variacao > 0 ? "+" : ""}${(
+                          pontoSelecionado.variacao / 100
+                        ).toFixed(2)}`
+                      : "-"}{" "}
+                  </p>
+                </h3>
+                <br />
+                <h3>
+                  % Variação do dia:{" "}
+                  <p>
+                    {parseFloat(
+                      pontoSelecionado.porcentagem_var.replace("%", "")
+                    ) /
+                      100 +
+                      "%"}
+                  </p>
+                </h3>
+              </div>
+            </div>
+          )}
 
           {/* Botão de seleção de datas */}
           <BotaoSelectData

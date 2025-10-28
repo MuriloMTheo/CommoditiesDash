@@ -261,6 +261,26 @@ body {
   background-color: #16baba;
 }
 
+/*Modal*/
+
+.modal-tela {
+  padding: 50px;
+  background-color: var(--color-bg-container);
+  border-radius: 12px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.modal-tela h3 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.modal-tela p {
+  font-size: 1.1rem;
+  color: var(--color-accent);
+}
+
 /*Responsividade (Mobile e Tablet)*/
 
 @media (max-width: 1024px) {
