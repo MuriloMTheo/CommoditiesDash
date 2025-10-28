@@ -41,8 +41,9 @@ function BotaoSelectData({ opcoesBotao, indice, setIndice }) {
 }
 
 function App() {
-  const opcoesBotao = ["7 dias", "15 dias", "30 dias", "90 dias", "Tudo"];
-  const [indice, setIndice] = useState(0);
+  const opcoesBotao = ["Tudo", "7 dias", "15 dias", "30 dias", "90 dias"];
+  const [indice, setIndice] = useState(0); /*indices de 0-4*/
+  const diasMap = { 0: 0, 1: 7, 2: 15, 3: 30, 4: 90 };
 
   const [chartData, setChartData] = useState({
     labels: [],
@@ -52,8 +53,13 @@ function App() {
   const [ultimoRegistro, setUltimoRegistro] = useState(null);
 
   useEffect(() => {
+    const QntDiaSelecionado = diasMap[indice];
     api
-      .get("")
+      .get("", {
+        params: {
+          dias: QntDiaSelecionado,
+        },
+      })
       .then((res) => {
         console.log("Resposta da API:", res.data);
         const dados = res.data;
@@ -100,7 +106,7 @@ function App() {
         console.log("Valores formatados:", valoresFormatados);
       })
       .catch((err) => console.log("Erro ao buscar dados:", err));
-  }, [CulturaSelecionada]);
+  }, [CulturaSelecionada, indice]);
 
   const options = {
     type: "line",
@@ -224,7 +230,7 @@ function App() {
           {/* Coluna de variações e datas */}
           <div className="cultura-container-coluna">
             <div className="valor-item6">
-              <div className="cultura-valortitle6">DATA COTAÇÃO</div>
+              <div className="cultura-valortitle6">DATA ÚLTIMA COTAÇÃO</div>
               <div className="cultura-diacotacao">
                 {CulturaSelecionada && ultimoRegistro
                   ? `${ultimoRegistro.data_hora.substring(0, 10)}`
