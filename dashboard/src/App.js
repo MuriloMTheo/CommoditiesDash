@@ -171,7 +171,6 @@ function App() {
       if (ponto.length > 0) {
         const indiceClicado = ponto[0].index;
         const label = chart.data.labels[indiceClicado];
-        const valor = chart.data.datasets[0].data[indiceClicado];
 
         const RegistroDoClick = dadosClickPonto.find(
           (item) => item.data_hora.substring(0, 10) === label
