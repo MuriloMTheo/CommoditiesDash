@@ -62,7 +62,7 @@ function App() {
   useEffect(() => {
     const QntDiaSelecionado = diasMap[indice];
     api
-      .get("", {
+      .get("/commodities", {
         params: {
           dias: QntDiaSelecionado,
         },
@@ -194,7 +194,7 @@ function App() {
       >
         <Menu>
           <MenuItem>Dashboard Avançado</MenuItem>
-          <MenuItem>Relatórios</MenuItem>
+          <MenuItem onClick={gerarRelatorio}>Relatórios</MenuItem>
           <MenuItem>Configurações</MenuItem>
         </Menu>
       </Sidebar>
