@@ -19,3 +19,17 @@ Script executado em 2025-11-11 19:00:09.950318
 Script executado em 2025-11-11 22:31:39.973877
 Script executado em 2025-11-12 22:13:27.089674
 Script executado em 2025-11-13 21:12:36.432661
+Script executado em 2025-11-14 19:00:08.816389
+Script executado em 2025-11-15 19:00:09.178910
+Script executado em 2025-11-16 19:00:08.904718
+Script executado em 2025-11-18 19:00:09.176580
+Script executado em 2025-11-19 19:00:06.582483
+Script executado em 2025-11-20 19:00:08.200277
+Script executado em 2025-11-21 19:00:08.695274
+Script executado em 2025-11-22 19:00:08.541961
+Script executado em 2025-11-23 19:00:18.592760
+Script executado em 2025-11-24 19:00:09.228876
+Script executado em 2025-11-25 19:00:11.671202
+Script executado em 2025-11-29 19:00:10.633759
+Script executado em 2025-11-30 19:00:21.107802
+Script executado em 2025-12-02 19:00:14.838454
